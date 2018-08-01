@@ -11,6 +11,7 @@
 <!ENTITY rfc2697 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2697.xml">
 <!ENTITY rfc2698 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2698.xml">
 <!ENTITY rfc6241 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6241.xml">
+<!ENTITY rfc6536 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6536.xml">
 <!ENTITY rfc6991 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6991.xml">
 <!ENTITY rfc7950 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7950.xml">
 <!ENTITY rfc8040 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8040.xml">
@@ -230,38 +231,37 @@
           <artwork><![CDATA[
 module: ietf-arp
     +--rw arp
+       +--rw dynamic-learning?        boolean
+       +--rw proxy-arp?               boolean
        +--rw global-static-entries {global-static-entries}?
-       |  +--rw static-entry* [ip-address]
-       |     +--rw ip-address     inet:ipv4-address-no-zone
-       |     +--rw mac-address    yang:mac-address
-       +--rw global-control
-          +--rw enable-learning?      boolean
-          +--rw enable-proxy?         boolean
-augment /if:interfaces/if:interface:
-    +--rw arp-dynamic-learning
-       +--rw expire-time?     uint32
+          +--rw static-entry* [ip-address]
+             +--rw ip-address     inet:ipv4-address-no-zone
+             +--rw mac-address    yang:mac-address
+
+  augment /if:interfaces/if:interface:
+    +--rw arp
+       +--rw expiry-time?     uint32
        +--rw learn-disable?   boolean
-       +--rw proxy   
-       |  +--rw mode          enumeration
+       +--rw proxy
+       |  +--rw mode?   enumeration
        +--rw probe
        |  +--rw interval?   uint8
        |  +--rw times?      uint8
        |  +--rw unicast?    boolean
        +--rw gratuitous
-       |  +--rw gratuitous-enable?   boolean
-       |  +--rw interval?            uint32
-       |  +--rw drop?                boolean
+       |  +--rw enable?     boolean
+       |  +--rw interval?   uint32
+       |  +--rw drop?       boolean
        +--ro statistics
-          +--ro in-requests-pkts?      uint16
-          +--ro in-replies-pkts?       uint16
-          +--ro in-gratuitous-pkts?    uint16
-          +--ro out-requests-pkts?     uint16
-          +--ro out-replies-pkts?      uint16
-          +--ro out-gratuitous-pkts?   uint16
+          +--ro in-requests-pkts?      yang:counter32
+          +--ro in-replies-pkts?       yang:counter32
+          +--ro in-gratuitous-pkts?    yang:counter32
+          +--ro out-requests-pkts?     yang:counter32
+          +--ro out-replies-pkts?      yang:counter32
+          +--ro out-gratuitous-pkts?   yang:counter32
   augment /if:interfaces/if:interface/ip:ipv4/ip:neighbor:
-    +--ro remaining-expire-time?   uint32
-		  
-		  ]]></artwork>
+    +--ro remaining-expiry-time?   uint32
+]]></artwork>
         </figure>
       </section>
 
@@ -270,11 +270,8 @@ augment /if:interfaces/if:interface:
     <section anchor="yangmodel" title="ARP YANG Module">
       <t>This section presents the ARP YANG module defined in this document.
       This YANG module imports typedefs from <xref target="RFC6991"/>.</t>
-
-      <figure>
-        <artwork><![CDATA[
-<CODE BEGINS>file "ietf-arp@2018-01-27.yang"		
-	
+      <figure><artwork><![CDATA[
+<CODE BEGINS>file "ietf-arp@2018-08-01.yang"
 module ietf-arp {
   yang-version 1.1;
   namespace "urn:ietf:params:xml:ns:yang:ietf-arp";
@@ -292,12 +289,12 @@ module ietf-arp {
   
   import ietf-interfaces {
     prefix if;
-    reference "RFC 8343: A Yang Data Model for Interface Management"
+    reference "RFC 8343: A Yang Data Model for Interface Management";
   }
   
   import ietf-ip {
     prefix ip;
-    reference "RFC 8344: A Yang Data Model for IP Management"
+    reference "RFC 8344: A Yang Data Model for IP Management";
   }  
 
   organization
@@ -316,15 +313,15 @@ module ietf-arp {
      static ARP configuration, dynamic ARP learning, ARP entry query,
      and packet statistics collection.";
 
-  revision 2018-01-27 {
+  revision 2018-08-01 {
     description
       "Init revision";
-          NOTE TO RFC EDITOR:
-      Please replace the following reference
-      to draft-ding-rtgwg-arp-yang-model-02 with
-      RFC number when published (i.e. RFC xxxx).
+      /* NOTE TO RFC EDITOR:
+         Please replace the following reference
+         to draft-ding-rtgwg-arp-yang-model-02 with
+         RFC number when published (i.e. RFC xxxx). */
     reference
-         "draft-ding-rtgwg-arp-yang-model-02";
+         "draft-ding-rtgwg-arp-yang-model-03";
   }
   
   /*
@@ -335,22 +332,44 @@ module ietf-arp {
       "This feature indicates that the device allows static entries
        to be configured globally.";
   }
-
   
   container arp {
     description
       "Address Resolution Protocol (ARP) management, which includes
         static ARP configuration, dynamic ARP learning, ARP entry
         query, and packet statistics collection.";
-		
+
+    leaf dynamic-learning {
+      type boolean;
+      default "true";
+      description
+        "Controls the default dynamic ARP learning behavior on all
+         interfaces on the device:
+           true -  dynamic learning is enabled on all interfaces by
+                   default,
+           false - dynamic learning is disabled on all interfaces by
+                   default";
+    }
+    leaf proxy-arp {
+      type boolean;
+      default "true";
+      description
+        "Controls the default proxy ARP behavior on all interfaces
+         on the device:
+           true - proxy ARP is enabled on interfaces by default,
+           false - proxy APR is disabled on interfaces by default"; 
+    }
+
     container global-static-entries {
       if-feature "global-static-entries";
       description
-        "Set a global static ARP entry, which is independent of the interface.";
+        "Set a global static ARP entry, which is independent of the
+         interface.";
       list static-entry {
         key "ip-address";
         description
-          "List of ARP static entries that can be configured globally.";
+          "List of ARP static entries that can be configured
+           globally.";
         leaf ip-address {
           type inet:ipv4-address-no-zone;
           description
@@ -360,44 +379,24 @@ module ietf-arp {
           type yang:mac-address;
           mandatory true;
           description
-            "MAC address in the format of H-H-H, in which H is
-                        a hexadecimal number of 1 to 4 bits.";
+            "MAC address in the format of H-H-H, in which H is a
+             hexadecimal number of 1 to 4 bits.";
         }
       }
-    }
-	
-    container global-control {
-      description
-        "Set global control parameters, which are independent of interface.";
-        leaf enable-learning {
-          type boolean;
-		  default "true";
-          description
-            "Enables or disables global dynamic ARP learning.
-			If 'true', then enforcement is enabled.
-			If 'false', then enforcement is disabled.";
-        }
-        leaf enable-proxy {
-          type boolean;
-          default "true";
-          description
-            "Enables or disables global proxy.
-			If 'true', then proxy is enabled.
-			If 'false', then proxy is disabled.";
-        }
     }	
-	
-   augment "/if:interfaces/if:interface" {
+  }
+  
+  augment "/if:interfaces/if:interface" {
     description
-      "Augment interface configuration with parameters of ARP.";
-    container arp-dynamic-learning {
+      "Augment interfaces with ARP configuration and state.";
+    container arp {
       description
-        "Support for ARP configuration on interfaces.";
-      leaf expire-time {
-        type timeticks {
+        "Dynamic ARP related configuration and state";
+      leaf expiry-time {
+        type uint32 {
           range "60..86400";
         }
-        units "second";
+        units "seconds";
         description
           "Aging time of a dynamic ARP entry.";
       }
@@ -405,48 +404,51 @@ module ietf-arp {
         type boolean;
         default "false";
         description
-          "Whether dynamic ARP learning is disabled on an interface.
-		  If the value is True, dynamic ARP learning is disabled.
-		  If the value is False, dynamic ARP learning is enabled.";
+          "Whether dynamic ARP learning is disabled on an interface:
+	    If the value is True, dynamic ARP learning is disabled.
+	    If the value is False, dynamic ARP learning is enabled.";
       }
 	  
       container proxy {
         description
           "Configuration parameters for proxy ARP";
-		leaf mode {
-		  type enumeration {
-			enum DISABLE {
-			  description
-				"The system should not respond to ARP requests that
-				do not specify an IP address configured on the local
-				subinterface as the target address.";
-			}
-			enum REMOTE_ONLY {
-			  description
-				"The system responds to ARP requests only when the
-				sender and target IP addresses are in different
-				subnets.";
-			}
-			enum ALL {
-			  description
-				"The system responds to ARP requests where the sender
-				and target IP addresses are in different subnets, as well
-				as those where they are in the same subnet.";
-			}
-		  }
-		  default "DISABLE";
-		  description
-			"When set to a value other than DISABLE, the local system should
-			respond to ARP requests that are for target addresses other than
-			those that are configured on the local subinterface using its own
-			MAC address as the target hardware address. If the REMOTE_ONLY
-			value is specified, replies are only sent when the target address
-			falls outside the locally configured subnets on the interface,
-			whereas with the ALL value, all requests, regardless of their
-			target address are replied to.";
-		  reference "RFC1027: Using ARP to Implement Transparent Subnet Gateways";
-       }	  
-      }	  
+        leaf mode {
+          type enumeration {
+            enum DISABLE {
+              description
+              "The system should not respond to ARP requests that do
+	       not specify an IP address configured on the local
+	       subinterface as the target address.";
+            }
+            enum REMOTE_ONLY {
+              description
+              "The system responds to ARP requests only when the
+	       sender and target IP addresses are in different
+	       subnets.";
+            }
+            enum ALL {
+              description
+              "The system responds to ARP requests where the sender
+	       and target IP addresses are in different subnets, as
+	       well as those where they are in the same subnet.";
+            }
+          }
+          default "DISABLE";
+          description
+            "When set to a value other than DISABLE, the local system
+	     should respond to ARP requests that are for target
+	     addresses other than those that are configured on the
+	     local subinterface using its own MAC address as the
+	     target hardware address. If the REMOTE_ONLY value is
+	     specified, replies are only sent when the target address
+	     falls outside the locally configured subnets on the
+	     interface, whereas with the ALL value, all requests,
+	     regardless of their target address are replied to.";
+          reference
+            "RFC1027: Using ARP to Implement Transparent Subnet
+             Gateways";
+        }	  
+      }
  
       container probe {
         description
@@ -478,14 +480,14 @@ module ietf-arp {
         }
       }
 	  
-      container gratuitous {
+      container gratuitous-arp {
         description
           "Configure gratuitous ARP.";
         leaf enable {
           type boolean;
           default "false";
           description
-            "Enable or disable sending gratuitous-arp packet on
+            "Enable or disable sending gratuitous ARP packet on
              interface.";
         }
         leaf interval {
@@ -494,14 +496,15 @@ module ietf-arp {
           }
           units "second";
           description
-            "The interval of sending gratuitous-arp packet on the
+            "The interval of sending gratuitous ARP packet on the
              interface.";
         }
         leaf drop {
           type boolean;
           default "false";
           description
-            "Drop the receipt of gratuitous ARP packets on the interface.";
+            "Drop the receipt of gratuitous ARP packets on the
+             interface.";
         }
       }
 	  
@@ -542,23 +545,19 @@ module ietf-arp {
       }
     }
   }		  
-			
-	
+				
   augment "/if:interfaces/if:interface/ip:ipv4/ip:neighbor" {
     description
-      "Augment neighbor list with parameters of ARP,
-       eg., support for remaining expire time query on interfaces.";
-    leaf remaining-expire-time {
+      "Augment neighbor list with parameters of ARP, eg., support for
+       remaining expiry time query on interfaces.";
+    leaf remaining-expiry-time {
       type uint32;
       config false;
       description
-        "Remaining expire time of a dynamic ARP entry. ";
+        "Remaining expiry time of a dynamic ARP entry. ";
     }
-   }
   }
-  
-}	
-	
+}
 ]]></artwork>
       </figure>
 
@@ -612,7 +611,7 @@ Requirement:
 Enable ARP dynamic learning configuration.
 
    &lt;config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
-      &lt;arp-dynamic-learning xmlns="urn:ietf:params:xml:ns:yang:ietf-arp-dynamic-learning"&gt;
+      &lt;arp xmlns="urn:ietf:params:xml:ns:yang:ietf-arp"&gt;
          &lt;if-name&gt; GE1/0/1 &lt;/if-name&gt; 
          &lt;expire-time&gt;1200&lt;/expire-time&gt;
       &lt;learn-disable&gt;false&lt;/learn-disable&gt;
@@ -627,7 +626,7 @@ Enable ARP dynamic learning configuration.
    &lt;interval&gt;60&lt;/interval&gt;
    &lt;drop&gt;false&lt;/drop&gt;
             &lt;gratuitous&gt;
-      &lt;/arp-dynamic-learning&gt;
+      &lt;/arp&gt;
  
            </artwork>
         </figure>
@@ -636,11 +635,11 @@ Enable ARP dynamic learning configuration.
 
     <section anchor="security" title="Security Considerations">
       <t>The YANG module defined in this document is designed to be accessed
-      via YANG based management protocols, such as NETCONF [RFC6241] and
-      RESTCONF [RFC8040]. Both of these protocols have mandatory-to- implement
+      via YANG based management protocols, such as NETCONF <xref target="RFC6241"/> and
+      RESTCONF <xref target="RFC8040"/>. Both of these protocols have mandatory-to- implement
       secure transport layers (e.g., SSH, TLS) with mutual authentication.</t>
 
-      <t>The NETCONF access control model (NACM) [RFC6536] provides the means
+      <t>The NETCONF access control model (NACM) <xref target="RFC6536"/> provides the means
       to restrict access for particular users to a pre-configured subset of
       all available protocol operations and content.</t>
 
@@ -678,6 +677,7 @@ Enable ARP dynamic learning configuration.
     <references title="Informative References">
       &rfc826;
       &rfc6241;
+      &rfc6536;
       &rfc8040;
       &rfc8340;
     </references>
