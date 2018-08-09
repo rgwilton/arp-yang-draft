@@ -3,7 +3,7 @@ IETF draft for ARP YANG model
 
 Comments of Tom Petch
 1.08/02/2018
-Another YANG I-D from the Routing Area; I wonder what I will find if I browse it:-)
+Another YANG I-D from the Routing Area; 
 
 - Abstract contains a [Reference]
 
