@@ -7,21 +7,18 @@ module ietf-arp {
     prefix inet;
     reference "RFC 6991: Common YANG Data Types";
   }
-
   import ietf-yang-types {
     prefix yang;
     reference "RFC 6991: Common YANG Data Types";
   }
-  
   import ietf-interfaces {
     prefix if;
     reference "RFC 8343: A Yang Data Model for Interface Management";
   }
-  
   import ietf-ip {
     prefix ip;
     reference "RFC 8344: A Yang Data Model for IP Management";
-  }  
+  }
 
   organization
     "IETF Routing Area Working Group (rtgwg)";
@@ -29,42 +26,47 @@ module ietf-arp {
     "WG Web: <http://tools.ietf.org/wg/rtgwg/>
      WG List: <mailto: rtgwg@ietf.org>
      Editor: Xiaojian Ding
-         dingxiaojian1@huawei.com
+         wjswsl@163.com
      Editor: Feng Zheng
          habby.zheng@huawei.com
      Editor: Robert Wilton
          rwilton@cisco.com";
+
   description
     "Address Resolution Protocol (ARP) management, which includes
      static ARP configuration, dynamic ARP learning, ARP entry query,
-     and packet statistics collection.";
+     and packet statistics collection.
+
+    Copyright (c) 2016 IETF Trust and the persons identified as
+     authors of the code.  All rights reserved.
+
+    Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject
+     to the license terms contained in, the Simplified BSD License
+     set forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (http://trustee.ietf.org/license-info).
+
+    This version of this YANG module is part of RFC XXXX; see the RFC
+      itself for full legal notices.";
 
   revision 2018-08-01 {
     description
       "Init revision";
-      /* NOTE TO RFC EDITOR:
-         Please replace the following reference
-         to draft-ding-rtgwg-arp-yang-model-02 with
-         RFC number when published (i.e. RFC xxxx). */
-    reference
-         "draft-ding-rtgwg-arp-yang-model-03";
+    reference "RFC XXXX: A Yang Data Model for ARP";
   }
-  
-  /*
-   * Features
-   */
+
   feature global-static-entries {
     description
       "This feature indicates that the device allows static entries
        to be configured globally.";
   }
-  
+
   container arp {
     description
       "Address Resolution Protocol (ARP) management, which includes
         static ARP configuration, dynamic ARP learning, ARP entry
         query, and packet statistics collection.";
-
     leaf dynamic-learning {
       type boolean;
       default "true";
@@ -83,9 +85,8 @@ module ietf-arp {
         "Controls the default proxy ARP behavior on all interfaces
          on the device:
            true - proxy ARP is enabled on interfaces by default,
-           false - proxy APR is disabled on interfaces by default"; 
+           false - proxy APR is disabled on interfaces by default";
     }
-
     container global-static-entries {
       if-feature "global-static-entries";
       description
@@ -109,9 +110,8 @@ module ietf-arp {
              hexadecimal number of 1 to 4 bits.";
         }
       }
-    }	
+    }
   }
-  
   augment "/if:interfaces/if:interface" {
     description
       "Augment interfaces with ARP configuration and state.";
@@ -131,10 +131,9 @@ module ietf-arp {
         default "false";
         description
           "Whether dynamic ARP learning is disabled on an interface:
-	    If the value is True, dynamic ARP learning is disabled.
-	    If the value is False, dynamic ARP learning is enabled.";
+           If the value is True, dynamic ARP learning is disabled.
+           If the value is False, dynamic ARP learning is enabled.";
       }
-	  
       container proxy {
         description
           "Configuration parameters for proxy ARP";
@@ -142,40 +141,39 @@ module ietf-arp {
           type enumeration {
             enum DISABLE {
               description
-              "The system should not respond to ARP requests that do
-	       not specify an IP address configured on the local
-	       subinterface as the target address.";
+                "The system should not respond to ARP requests that 
+                 do not specify an IP address configured on the local
+                 subinterface as the target address.";
             }
             enum REMOTE_ONLY {
               description
-              "The system responds to ARP requests only when the
-	       sender and target IP addresses are in different
-	       subnets.";
+                "The system responds to ARP requests only when the
+                 sender and target IP addresses are in different
+                 subnets.";
             }
             enum ALL {
               description
-              "The system responds to ARP requests where the sender
-	       and target IP addresses are in different subnets, as
-	       well as those where they are in the same subnet.";
+                "The system responds to ARP requests where the sender
+                 and target IP addresses are in different subnets, as
+                 well as those where they are in the same subnet.";
             }
           }
           default "DISABLE";
           description
             "When set to a value other than DISABLE, the local system
-	     should respond to ARP requests that are for target
-	     addresses other than those that are configured on the
-	     local subinterface using its own MAC address as the
-	     target hardware address. If the REMOTE_ONLY value is
-	     specified, replies are only sent when the target address
-	     falls outside the locally configured subnets on the
-	     interface, whereas with the ALL value, all requests,
-	     regardless of their target address are replied to.";
+             should respond to ARP requests that are for target
+             addresses other than those that are configured on the
+             local subinterface using its own MAC address as the
+             target hardware address. If the REMOTE_ONLY value is
+             specified, replies are only sent when the target address
+             falls outside the locally configured subnets on the
+             interface, whereas with the ALL value, all requests,
+             regardless of their target address are replied to.";
           reference
             "RFC1027: Using ARP to Implement Transparent Subnet
              Gateways";
-        }	  
+        }
       }
- 
       container probe {
         description
           "Common configuration parameters for all ARP probe.";
@@ -205,7 +203,6 @@ module ietf-arp {
              entry.";
         }
       }
-	  
       container gratuitous-arp {
         description
           "Configure gratuitous ARP.";
@@ -233,7 +230,6 @@ module ietf-arp {
              interface.";
         }
       }
-	  
       container statistics {
         config false;
         description
@@ -270,8 +266,7 @@ module ietf-arp {
         }
       }
     }
-  }		  
-				
+  }
   augment "/if:interfaces/if:interface/ip:ipv4/ip:neighbor" {
     description
       "Augment neighbor list with parameters of ARP, eg., support for
