@@ -22,7 +22,7 @@
 <!ENTITY rfc8344 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8344.xml">
 ]>
 
-<rfc category="std" docName="draft-ding-rtgwg-arp-yang-model-03"
+<rfc category="std" docName="draft-ietf-rtgwg-arp-yang-model-01"
      ipr="trust200902">
   <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
@@ -102,15 +102,14 @@
     <workgroup>RTGWG</workgroup>
 
     <abstract>
-      <t>This document defines a YANG data model for the management of the
-      Address Resolution Protocol (ARP). It extends the basic ARP
-      functionality contained in the ietf-ip YANG data model, defined in <xref
-      target="RFC8344"/>, to provide management of optional ARP features and
+      <t>This document defines a YANG data model for the management of
+      the Address Resolution Protocol (ARP). It extends the basic ARP
+      functionality contained in the ietf-ip YANG data model, defined
+      in RFC 8344, to provide management of optional ARP features and
       statistics.</t>
 
       <t>The YANG data model in this document conforms to the Network
-      Management Datastore Architecture defined in <xref
-      target="RFC8342"/>.</t>
+      Management Datastore Architecture defined in RFC 8342.</t>
     </abstract>
   </front>
 
@@ -747,8 +746,8 @@ Reference: RFC XXXX
     </section>
 
     <section anchor="ack" title="Acknowledgments">
-      <t>The authors wish to thank Alex Campbell and Reshad Rahman, Qin Wu,
-      many others for their helpful comments.</t>
+      <t>The authors wish to thank Alex Campbell and Reshad Rahman,
+      Qin Wu, Tom Petch, many others for their helpful comments.</t>
     </section>
 
     <!---->
