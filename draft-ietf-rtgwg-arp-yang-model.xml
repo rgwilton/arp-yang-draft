@@ -22,7 +22,7 @@
 <!ENTITY rfc8344 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8344.xml">
 ]>
 
-<rfc category="std" docName="draft-ietf-rtgwg-arp-yang-model-01"
+<rfc category="std" docName="draft-ietf-rtgwg-arp-yang-model-02"
      ipr="trust200902">
   <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
@@ -115,39 +115,41 @@
 
   <middle>
     <section anchor="intro" title="Introduction">
-      <t>This document defines a YANG <xref target="RFC7950"/> data model for
-      the Address Resolution Protocol <xref target="RFC0826"/> implementation
-      and identification of some common properties within a device. Devices
-      have common properties that need to be configured and monitored in a
-      standard way. This document is intended to present universal ARP
-      protocol configuration and many vendors can implement it.</t>
+      <t>Basic ARP functionality is supported by the ietf-ip YANG data
+      model, defined in <xref target="RFC8344"/>.  This document
+      defines a YANG <xref target="RFC7950"/> data model that extends
+      the basic ARP YANG support to also cover optional ARP features,
+      and ARP related statistics to aid network monitoring and
+      troubleshooting.</t>
 
-      <t>The data model convers configuration of system parameters of ARP,
-      such as static ARP entries, timeout for dynamic ARP entries, interface
-      ARP, proxy ARP, and so on. It also provides information about running
-      state of ARP implementations.</t>
+      <t>This model defines YANG configuration and operational state
+      data nodes both for ARP related functionality formally specified
+      in other RFCs (such as <xref target="RFC8344"/> and <xref
+      target="RFC1027"/>), but also for common ARP behaviour
+      that is often supported on network devices.</t>
 
+      <t>Where necessary, the expected behaviour of the YANG data
+      nodes is defined in the YANG model, and this document.</t>
+      
       <t>The YANG modules in this document conform to the Network Management
-      Datastore Architecture (NMDA) [RFC8342].</t>
+      Datastore Architecture (NMDA) <xref target="RFC8342"/>.</t>
 
       <t></t>
 
       <t>Editorial Note: (To be removed by RFC Editor)</t>
 
-      <t>This draft contains many placeholder values that need to be replaced
-      with finalized values at the time of publication. Please apply the
-      following replacements</t>
+      <t>This draft contains several placeholder values that need to be replaced
+      with finalized values at the time of publication.  Please apply the
+      following replacements:</t>
 
       <t><list style="symbols">
           <t>"XXXX" --&gt; the assigned RFC value for this draft both in this
           draft and in the YANG models under the revision statement.</t>
 
-          <t>Revision date in model, in the format 2018-08-01 needs to get
+          <t>The "revision" date in model, in the format XXXX-XX-XX, needs to be
           updated with the date the draft gets approved. The date also needs
           to get reflected on the line with &lt;CODE BEGINS&gt;.</t>
         </list></t>
-
-      <t/>
 
       <t/>
 
@@ -203,13 +205,34 @@
     <!-- intro -->
 
     <section anchor="problem" title="Problem Statement">
-      <t>This document defines a YANG <xref target="RFC7950"/> configuration
-      data model that may be used to configure the ARP feature running on a
-      system. Data model "ietf-ip" <xref target="RFC8344"/> covers the address
-      mapping functionality. However, this functionality is strictly dependent
-      on IPv4 networks, and many ARP related functionalities are missing, e.g.
-      device global ARP entries and control, configuration related to dynamic
-      ARP learning, proxy ARP, gratuitous ARP, etc.</t>
+      <t>Neither ARP <xref target="RFC8344"/>, nor Proxy-ARP <xref
+      target="RFC1027"/>, define standard network management
+      configuration models.  Instead, network equipment vendors have
+      implemented their own bespoke configuration interfaces and
+      models.</t>
+      
+      <t>Network operators benefit from having common network
+      management models defined that can be implemented by multiple
+      network equipment manufacturers.  This simplifies the operation
+      and management of network devices.</t>
+
+      <t>Some, but not all, required ARP functionality has been
+      defined in ietf-ip.yang (<xref target="RFC8344"/>). Providing a
+      standard YANG model that models these optional ARP features, that
+      are fairly widely implemented by network equipment manufacturers
+      , and used by network operators, is benefical to the general
+      goal of interoperability in the networking industry.</t>
+
+      <!-- Some of this should move to the design section ...
+	  <t>This document defines a YANG <xref
+      target="RFC7950"/> configuration data model that may be used to
+      configure the ARP feature running on a system. Data model
+      "ietf-ip" <xref target="RFC8344"/> covers the address mapping
+      functionality. However, this functionality is strictly dependent
+      on IPv4 networks, and many ARP related functionalities are
+      missing, e.g.  device global ARP entries and control,
+      configuration related to dynamic ARP learning, proxy ARP,
+      gratuitous ARP, etc.</t>
 
       <t>The data model makes use of the YANG "feature" construct which allows
       implementations to support only those ARP features that lie within their
@@ -218,7 +241,7 @@
 
       <t>This model can be used to configure the ARP applications for
       discovering the link layer address associated with a given Internet
-      layer address.</t>
+      layer address.</t> -->
     </section>
 
     <!-- problem -->
@@ -248,21 +271,25 @@
       </section>
 
       <section title="proxy ARP">
-        <t>Proxy ARP <xref target="RFC1027"/> can be configured to enable the
-        switch to respond to ARP queries for network addresses by offering its
-        own Ethernet media access control (MAC) address. With proxy ARP
-        enabled, the switch captures and routes traffic to the intended
-        destination.</t>
+        <t>Proxy ARP, defined in <xref target="RFC1027"/>, allows a
+        router to respond to ARP requests on behalf of another machine
+        that is not on the same local subnet, offering its own
+        Ethernet media access control (MAC) address.  By replying in
+        such a way, the router then takes responsibility for routing
+        packets to the intended destination.</t>
       </section>
 
       <section title="gratuitous ARP">
-        <t>Gratuitous ARP requests help detect duplicate IP addresses. A
-        gratuitous ARP is a broadcast request for a router's own IP address.
-        If a router or switch sends an ARP request for its own IP address and
-        no ARP replies are received, the router- or switch-assigned IP address
-        is not being used by other nodes. However, if a router or switch sends
-        an ARP request for its own IP address and an ARP reply is received,
-        the router- or switch-assigned IP address is already being used by
+        <t>Gratuitous ARP requests can help detect duplicate IP
+        addresses. A gratuitous ARP is a broadcast request for a
+        router's own IP address.</t>
+	<t>a network device, or host, sends
+        an ARP request for its own IP address and no ARP replies are
+        received, then the network device may infer that the assigned
+        IP address is not being used by other hosts, or network
+        devices.  However, if a router or switch sends an ARP request
+        for its own IP address and an ARP reply is received, the
+        router- or switch-assigned IP address is already being used by
         another node.</t>
       </section>
 
