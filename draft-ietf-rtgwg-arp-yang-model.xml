@@ -10,9 +10,13 @@
 <!ENTITY rfc1027 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1027.xml">
 <!ENTITY rfc2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY rfc3688 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3688.xml">
+<!ENTITY rfc5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
+<!ENTITY rfc6020 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6020.xml">
 <!ENTITY rfc6241 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6241.xml">
+<!ENTITY rfc6242 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6242.xml">
 <!ENTITY rfc6991 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6991.xml">
 <!ENTITY rfc7950 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7950.xml">
+<!ENTITY rfc8040 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8014.xml">
 <!ENTITY rfc8040 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8040.xml">
 <!ENTITY rfc8174 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY rfc8340 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8340.xml">
@@ -277,6 +281,12 @@
         Ethernet media access control (MAC) address.  By replying in
         such a way, the router then takes responsibility for routing
         packets to the intended destination.</t>
+        <t>In the case of certain data center network virtualization, 
+        as specified in An Architecture for Data-Center NVO3 
+        <xref target="RFC 8014"/>, the proxy ARP can be extended
+        to intercept all ARP requests, including source and target IP
+        addresses in different subnets, and those ARP requests in the 
+        same subnet to suppress ARP handling.</t>	      
       </section>
 
       <section title="gratuitous ARP">
@@ -303,7 +313,6 @@
 module: ietf-arp
     +--rw arp
        +--rw dynamic-learning?        boolean
-       +--rw proxy-arp?               boolean
        +--rw global-static-entries {global-static-entries}?
           +--rw static-entry* [ip-address]
              +--rw ip-address     inet:ipv4-address-no-zone
@@ -344,10 +353,11 @@ module: ietf-arp
       YANG Data Types</xref>, <xref target="RFC8343">A YANG Data Model for
       Interface Management</xref>, and <xref target="RFC8344">A YANG Data
       Model for IP Management</xref>.</t>
-
+	    
+      <t>&lt;CODE BEGINS&gt; file "ietf-arp@2018-09-28.yang" </t>
+	    
       <figure>
         <artwork>
-&lt;CODE BEGINS&gt;file "ietf-arp@2018-08-01.yang"
 module ietf-arp {
   yang-version 1.1;
   namespace "urn:ietf:params:xml:ns:yang:ietf-arp";
@@ -387,7 +397,7 @@ module ietf-arp {
      static ARP configuration, dynamic ARP learning, ARP entry query,
      and packet statistics collection.
 
-    Copyright (c) 2016 IETF Trust and the persons identified as
+    Copyright (c) 2018 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
     Redistribution and use in source and binary forms, with or
@@ -400,7 +410,7 @@ module ietf-arp {
     This version of this YANG module is part of RFC XXXX; see the RFC
       itself for full legal notices.";
 
-  revision 2018-08-01 {
+  revision 2018-09-28 {
     description
       "Init revision";
     reference "RFC XXXX: A Yang Data Model for ARP";
@@ -428,15 +438,7 @@ module ietf-arp {
            false - dynamic learning is disabled on all interfaces by
                    default";
     }
-    leaf proxy-arp {
-      type boolean;
-      default "true";
-      description
-        "Controls the default proxy ARP behavior on all interfaces
-         on the device:
-           true - proxy ARP is enabled on interfaces by default,
-           false - proxy APR is disabled on interfaces by default";
-    }
+
     container global-static-entries {
       if-feature "global-static-entries";
       description
@@ -450,14 +452,13 @@ module ietf-arp {
         leaf ip-address {
           type inet:ipv4-address-no-zone;
           description
-            "IP address, in dotted decimal notation.";
+            "IP address of a neighbor node.";
         }
         leaf mac-address {
           type yang:mac-address;
           mandatory true;
           description
-            "MAC address in the format of H-H-H, in which H is a
-             hexadecimal number of 1 to 4 bits.";
+            "MAC address of a neighbor node.";
         }
       }
     }
@@ -642,10 +643,9 @@ module ietf-arp {
       specified in Section 4.</t>
 
       <section title="Static ARP Entries">
+        <t>Requirement: Enable static ARP entry global configuration.</t>	      
         <figure>
           <artwork>  
-Requirement:
-Enable static ARP entry global configuration (not rely on interface).
    &lt;config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
       &lt;arp xmlns="urn:ietf:params:xml:ns:yang:ietf-arp"&gt;
          &lt;static-tables&gt;      
@@ -657,11 +657,11 @@ Enable static ARP entry global configuration (not rely on interface).
       </artwork>
         </figure>
 
+        <t>Requirement: Enable static ARP entry configuration on interface
+        (defined in [RFC8344] ).</t>
+	      
         <figure>
           <artwork>  
-Requirement:
-Enable static ARP entry configuration on interface (defined in 
-draft [I-D.ietf-netmod-rfc7277bis]).
    &lt;config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
       &lt;ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip"&gt;
          &lt;neighbor&gt;
@@ -676,11 +676,9 @@ draft [I-D.ietf-netmod-rfc7277bis]).
       </section>
 
       <section title="ARP Dynamic Learning">
+        <t>Requirement: Enable ARP dynamic learning configuration.</t>	      
         <figure>
           <artwork>  
-Requirement:
-Enable ARP dynamic learning configuration.
-
    &lt;config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
       &lt;arp xmlns="urn:ietf:params:xml:ns:yang:ietf-arp"&gt;
          &lt;if-name&gt; GE1/0/1 &lt;/if-name&gt; 
@@ -717,7 +715,7 @@ XML: N/A, the requested URI is an XML namespace.
       </figure>
 
       <t>This document registers a YANG module in the YANG Module Names
-      registry <xref target="RFC7950"/>.</t>
+      registry <xref target="RFC6020"/>.</t>
 
       <figure>
         <artwork>Name: ietf-arp
@@ -729,27 +727,29 @@ Reference: RFC XXXX
     </section>
 
     <section anchor="security" title="Security Considerations">
-      <t>The YANG module defined in this document is designed to be accessed
-      via YANG based management protocols, such as NETCONF <xref
-      target="RFC6241"/> and RESTCONF <xref target="RFC8040"/>. Both of these
-      protocols have mandatory-to- implement secure transport layers (e.g.,
-      SSH, TLS) with mutual authentication.</t>
+      <t>The YANG module specified in this document defines a schema for data
+	that is designed to be accessed via network management protocols such
+	as NETCONF <xref target="RFC6241"/> or RESTCONF <xref target="RFC8040"/>
+        . The lowest NETCONF layer is the secure transport layer, and the 
+	mandatory-to-implement secure transport is Secure Shell (SSH) <xref 
+        target="RFC6242"/>. The lowest RESTCONF layer is HTTPS, and the 
+        mandatory-to-implement secure transport is TLS <xref 
+	target="RFC5246"/>.</t>
 
-      <t>The NETCONF access control model (NACM) <xref target="RFC8341"/>
-      provides the means to restrict access for particular users to a
-      pre-configured subset of all available protocol operations and
-      content.</t>
+ 
+      <t>The NETCONF access control model <xref target="RFC8341"/> provides
+      the means to restrict access for particular NETCONF or RESTCONF users
+      to a preconfigured subset of all available NETCONF or RESTCONF protocol
+      operations and content..</t>
 
       <t>There are a number of data nodes defined in this YANG module that are
       writable/creatable/deletable (i.e., config true, which is the default).
       These data nodes may be considered sensitive or vulnerable in some
       network environments. Write operations (e.g., edit-config) to these data
       nodes without proper protection can have a negative effect on network
-      operations.</t>
-
-      <t>These are the subtrees and data nodes and their
+      operations.These are the subtrees and data nodes and their 
       sensitivity/vulnerability:</t>
-
+	    
       <t><list style="hanging">
           <t>arp/dynamic-learning: This leaf is used to enable ARP dynamic
           learning on all interfaces.ARP dynamic learning could allow an
@@ -786,8 +786,12 @@ Reference: RFC XXXX
       &rfc1027;
       &rfc2119;
       &rfc3688;
+      &rfc5246;
+      &rfc6020;	    
+      &rfc6242;	    
       &rfc6991;
       &rfc7950;
+      &rfc8014;	    
       &rfc8174;
       &rfc8342; 
       &rfc8343;
