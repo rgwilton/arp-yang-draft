@@ -1,3 +1,24 @@
+
+1.09/01/2018
+
+- YANG module copyright is 2016 which will get fixed but makes me notice ....
+
+- Security Considerations is not the current template; should have Normative References to SSH and TLS
+
+- s5.1 has
+draft [I-D.ietf-netmod-rfc7277bis]).
+which is now an RFC
+
+- IANA Considerations references RFC7950.  As I learnt lately, RFC6020 is better here as all RFC7950 does is point you to RFC6020
+
+-
+"MAC address in the format of H-H-H, in which H is a  hexadecimal number of 1 to 4 bits.";
+
+If H has a maximum of 4 bits, then you have a 12 bit address, not quite the MAC I see these days!  I wonder if it is better to leave this out and let readers refer to RFC6991.
+
+Tom Petch
+
+version1 has addressed the following comments：
 # arp-yang-draft
 IETF draft for ARP YANG model
 
