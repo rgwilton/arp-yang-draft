@@ -1,5 +1,7 @@
+modification includes:
+1.proxy arp extension 
 
-1.09/01/2018
+2. 09/01/2018 Tom Petch
 
 - YANG module copyright is 2016 which will get fixed but makes me notice ....
 
@@ -16,7 +18,7 @@ which is now an RFC
 
 If H has a maximum of 4 bits, then you have a 12 bit address, not quite the MAC I see these days!  I wonder if it is better to leave this out and let readers refer to RFC6991.
 
-Tom Petch
+
 
 version1 has addressed the following comments：
 # arp-yang-draft
