@@ -103,6 +103,7 @@ module ietf-arp {
       }
     }
   }
+  
   augment "/if:interfaces/if:interface" {
     description
       "Augment interfaces with ARP configuration and state.";
