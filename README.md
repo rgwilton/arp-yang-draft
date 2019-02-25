@@ -1,3 +1,9 @@
+2019/02/25 updates
+1.remove global-static-entries and arp-probe nodes in the arp model
+2.update the description text of gratuitous-arp and add references of rfc related
+
+-------------------------------------------
+
 modification includes:
 1.proxy arp extension 
 
