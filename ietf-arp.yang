@@ -3,10 +3,6 @@ module ietf-arp {
   namespace "urn:ietf:params:xml:ns:yang:ietf-arp";
   prefix arp;
 
-  import ietf-inet-types {
-    prefix inet;
-    reference "RFC 6991: Common YANG Data Types";
-  }
   import ietf-yang-types {
     prefix yang;
     reference "RFC 6991: Common YANG Data Types";
@@ -25,48 +21,43 @@ module ietf-arp {
   contact
     "WG Web: <http://tools.ietf.org/wg/rtgwg/>
      WG List: <mailto: rtgwg@ietf.org>
-     Editor: Xiaojian Ding
-         wjswsl@163.com
      Editor: Feng Zheng
          habby.zheng@huawei.com
+     Editor: Bo Wu
+         lana.wubo@huawei.com
      Editor: Robert Wilton
-         rwilton@cisco.com";
-
+         rwilton@cisco.com
+     Editor: Xiaojian Ding
+         wjswsl@163.com";
   description
     "Address Resolution Protocol (ARP) management, which includes
      static ARP configuration, dynamic ARP learning, ARP entry query,
      and packet statistics collection.
 
-    Copyright (c) 2018 IETF Trust and the persons identified as
+     Copyright (c) 2018 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
-    Redistribution and use in source and binary forms, with or
+     Redistribution and use in source and binary forms, with or
      without modification, is permitted pursuant to, and subject
      to the license terms contained in, the Simplified BSD License
      set forth in Section 4.c of the IETF Trust's Legal Provisions
      Relating to IETF Documents
      (http://trustee.ietf.org/license-info).
 
-    This version of this YANG module is part of RFC XXXX; see the RFC
+     This version of this YANG module is part of RFC XXXX; see the RFC
       itself for full legal notices.";
 
-  revision 2018-08-01 {
+  revision 2019-02-21 {
     description
       "Init revision";
     reference "RFC XXXX: A Yang Data Model for ARP";
   }
 
-  feature global-static-entries {
-    description
-      "This feature indicates that the device allows static entries
-       to be configured globally.";
-  }
-
   container arp {
     description
       "Address Resolution Protocol (ARP) management, which includes
-        static ARP configuration, dynamic ARP learning, ARP entry
-        query, and packet statistics collection.";
+       dynamic ARP learning, ARP entry query, and packet statistics
+       collection.";
     leaf dynamic-learning {
       type boolean;
       default "true";
@@ -77,34 +68,10 @@ module ietf-arp {
                    default,
            false - dynamic learning is disabled on all interfaces by
                    default";
-    }
-
-    container global-static-entries {
-      if-feature "global-static-entries";
-      description
-        "Set a global static ARP entry, which is independent of the
-         interface.";
-      list static-entry {
-        key "ip-address";
-        description
-          "List of ARP static entries that can be configured
-           globally.";
-        leaf ip-address {
-          type inet:ipv4-address-no-zone;
-          description
-            "IP address of a neighbor node.";
-        }
-        leaf mac-address {
-          type yang:mac-address;
-          mandatory true;
-          description
-            "MAC address of a neighbor node.";
-        }
-      }
+      reference "RFC826: An Ethernet Address Resolution Protocol";
     }
   }
-  
-  augment "/if:interfaces/if:interface" {
+  augment "/if:interfaces/if:interface/ip:ipv4" {
     description
       "Augment interfaces with ARP configuration and state.";
     container arp {
@@ -133,7 +100,7 @@ module ietf-arp {
           type enumeration {
             enum DISABLE {
               description
-                "The system should not respond to ARP requests that 
+                "The system should not respond to ARP requests that
                  do not specify an IP address configured on the local
                  subinterface as the target address.";
             }
@@ -166,38 +133,10 @@ module ietf-arp {
              Gateways";
         }
       }
-      container probe {
-        description
-          "Common configuration parameters for all ARP probe.";
-        leaf interval {
-          type uint8 {
-            range "1..5";
-          }
-          units "second";
-          description
-            "Interval for detecting dynamic ARP entries.";
-        }
-        leaf times {
-          type uint8 {
-            range "0..10";
-          }
-          description
-            "Number of aging probe attempts for a dynamic ARP entry.
-             If a device does not receive an ARP reply message after
-             the number of aging probe attempts reaches a specified
-             number,thedynamic ARP entry is deleted.";
-        }
-        leaf unicast {
-          type boolean;
-          default "false";
-          description
-            "Send unicast ARP aging probe messages for a dynamic ARP
-             entry.";
-        }
-      }
       container gratuitous-arp {
         description
           "Configure gratuitous ARP.";
+        reference "RFC5227: IPv4 Address Conflict Detection";
         leaf enable {
           type boolean;
           default "false";
@@ -212,13 +151,6 @@ module ietf-arp {
           units "second";
           description
             "The interval of sending gratuitous ARP packet on the
-             interface.";
-        }
-        leaf drop {
-          type boolean;
-          default "false";
-          description
-            "Drop the receipt of gratuitous ARP packets on the
              interface.";
         }
       }
