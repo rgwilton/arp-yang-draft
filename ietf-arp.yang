@@ -55,15 +55,14 @@ module ietf-arp {
 
   container arp {
     description
-      "Address Resolution Protocol (ARP) management, which includes
-       dynamic ARP learning, ARP entry query, and packet statistics
-       collection.";
+      "Address Resolution Protocol (ARP)";
     leaf dynamic-learning {
       type boolean;
       default "true";
       description
-        "Controls the default dynamic ARP learning behavior on all
-         interfaces on the device:
+        "Controls the default ARP learning behavior on all
+         interfaces on the device, unless explicit overridden by
+         the per-interface dynamic-learning leaf:
            true -  dynamic learning is enabled on all interfaces by
                    default,
            false - dynamic learning is disabled on all interfaces by
@@ -76,57 +75,61 @@ module ietf-arp {
       "Augment interfaces with ARP configuration and state.";
     container arp {
       description
-        "Dynamic ARP related configuration and state";
+        "Address Resolution Protocol (ARP) related configuration
+         and state";
       leaf expiry-time {
         type uint32 {
-          range "60..86400";
+          range "30..86400";
         }
         units "seconds";
         description
-          "Aging time of a dynamic ARP entry.";
+          "Aging time of a received dynamic ARP entry before it is
+           removed from the cache.";
       }
-      leaf learn-disable {
+      leaf dynamic-learning {
         type boolean;
-        default "false";
         description
-          "Whether dynamic ARP learning is disabled on an interface:
-           If the value is True, dynamic ARP learning is disabled.
-           If the value is False, dynamic ARP learning is enabled.";
+          "Controls whether dynamic ARP learning is enabled on the
+           interface.  If not configured, it defaults to the behavior
+           specified in the per-device /arp/dynamic-learning leaf.
+
+             true -  dynamic learning is enabled
+             false - dynamic learning is disabled";
       }
       container proxy {
         description
           "Configuration parameters for proxy ARP";
         leaf mode {
           type enumeration {
-            enum DISABLE {
+            enum disabled {
               description
-                "The system should not respond to ARP requests that
-                 do not specify an IP address configured on the local
-                 subinterface as the target address.";
+                "The system only responds to ARP requests that
+                 specify a target address configured on the local
+                 interface.";
             }
-            enum REMOTE_ONLY {
+            enum remote-only {
               description
                 "The system responds to ARP requests only when the
                  sender and target IP addresses are in different
                  subnets.";
             }
-            enum ALL {
+            enum all {
               description
                 "The system responds to ARP requests where the sender
                  and target IP addresses are in different subnets, as
                  well as those where they are in the same subnet.";
             }
           }
-          default "DISABLE";
+          default "disabled";
           description
-            "When set to a value other than DISABLE, the local system
-             should respond to ARP requests that are for target
-             addresses other than those that are configured on the
-             local subinterface using its own MAC address as the
-             target hardware address. If the REMOTE_ONLY value is
+            "When set to a value other than 'disable', the local
+             system should respond to ARP requests that are for
+             target addresses other than those that are configured on
+             the local subinterface using its own MAC address as the
+             target hardware address.  If the 'remote-only' value is
              specified, replies are only sent when the target address
              falls outside the locally configured subnets on the
-             interface, whereas with the ALL value, all requests,
+             interface, whereas with the 'all' value, all requests,
              regardless of their target address are replied to.";
           reference
             "RFC1027: Using ARP to Implement Transparent Subnet
@@ -134,72 +137,94 @@ module ietf-arp {
         }
       }
       container gratuitous-arp {
-        description
-          "Configure gratuitous ARP.";
+        description "Configure gratuitous ARP.";
         reference "RFC5227: IPv4 Address Conflict Detection";
         leaf enable {
           type boolean;
-          default "false";
           description
-            "Enable or disable sending gratuitous ARP packet on
-             interface.";
+            "Enable or disable sending gratuitous ARP packet on the
+             interface.  The default behaviour is device specific";
         }
         leaf interval {
           type uint32 {
             range "1..86400";
           }
-          units "second";
+          units "seconds";
           description
-            "The interval of sending gratuitous ARP packet on the
-             interface.";
+            "The interval, in seconds, between sending gratuitous ARP
+             packet on the interface.";
         }
       }
       container statistics {
         config false;
         description
-          "IP ARP Statistics information on interfaces";
+          "ARP per-interface packet statistics
+
+           For all ARP counters, discontinuities in the value can
+           occur at re-initialization of the management system and at
+           other times as indicated by the value of
+           'discontinuity-time'.";
+
+        leaf discontinuity-time {
+          type yang:date-and-time;
+          description
+            "The time on the most recent occasion at which any one or
+             more of this interface's ARP counters suffered a
+             discontinuity.  If no such discontinuities have occurred
+             since the last re-initialization of the local management
+             subsystem, then this node contains the time the local
+             management subsystem re-initialized itself.";
+        }
+        
         leaf in-requests-pkts {
           type yang:counter32;
           description
-            "Total ARP requests received";
+            "The number of ARP request packets received on this
+             interface.";
         }
+
         leaf in-replies-pkts {
           type yang:counter32;
           description
-            "Total ARP replies received";
+            "The number of ARP reply packets received on this
+             interface.";
         }
         leaf in-gratuitous-pkts {
           type yang:counter32;
           description
-            "Total gratuitous ARP received";
+            "The number of gratuitous ARP packets received on this
+             interface.";
         }
         leaf out-requests-pkts {
           type yang:counter32;
           description
-            "Total ARP requests sent";
+            "The number of ARP request packets sent on this interface.";
         }
         leaf out-replies-pkts {
           type yang:counter32;
           description
-            "Total ARP replies sent";
+            "The number of ARP reply packets sent on this interface.";
         }
         leaf out-gratuitous-pkts {
           type yang:counter32;
           description
-            "Total gratuitous ARP sent";
+            "The number of gratuitous ARP packets sent on this
+             interface.";
         }
       }
     }
   }
+  
   augment "/if:interfaces/if:interface/ip:ipv4/ip:neighbor" {
     description
-      "Augment neighbor list with parameters of ARP, eg., support for
-       remaining expiry time query on interfaces.";
+      "Augment IPv4 neighbor list with ARP expiry time.";
     leaf remaining-expiry-time {
       type uint32;
+      units "seconds";
       config false;
       description
-        "Remaining expiry time of a dynamic ARP entry. ";
+        "The number of seconds until the dynamic ARP entry expires and is
+         removed from the ARP cache";
     }
   }
 }
