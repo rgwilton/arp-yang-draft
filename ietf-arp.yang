@@ -96,7 +96,7 @@ module ietf-arp {
              true -  dynamic learning is enabled
              false - dynamic learning is disabled";
       }
-      container proxy {
+      container proxy-arp {
         description
           "Configuration parameters for proxy ARP";
         leaf mode {
