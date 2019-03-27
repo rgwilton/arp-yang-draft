@@ -26,7 +26,7 @@
 <!ENTITY rfc8344 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8344.xml">
 <!ENTITY rfc8446 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8446.xml">
 ]> 
-<rfc category="std" docName="draft-ietf-rtgwg-arp-yang-model-02"
+<rfc category="std" docName="draft-ietf-rtgwg-arp-yang-model-03"
      ipr="trust200902">
   <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
@@ -77,7 +77,7 @@
       </address>
     </author>
 
-    <author fullname="Bo Wu" initials="B" surname="Wu">
+    <author fullname="Bo Wu" initials="B" surname="Wu" role="editor">
       <organization>Huawei</organization>
 
       <address>
@@ -85,7 +85,7 @@
       </address>
     </author>
 
-    <author fullname="Robert Wilton" initials="R" surname="Wilton">
+    <author fullname="Robert Wilton" initials="R" surname="Wilton" role="editor">
       <organization>Cisco Systems</organization>
 
       <address>
@@ -302,10 +302,10 @@
             an ARP request containing a source IP that matches its own, then
             it knows there is an IP conflict. </t>
 
-            <t>Advertises a new MAC address: Also in RFC 5227, if the MAC
-            address of a host changes because its network adapter is replaced,
-            the host sends a gratuitous ARP packet to notify all hosts of the
-            change before the ARP entry is aged out.</t>
+            <t>Advertises a new MAC address: Also in <xref target="RFC5227"/>,
+            if the MAC address of a host changes because its network adapter is
+            replaced, the host sends a gratuitous ARP packet to notify all hosts
+            of the change before the ARP entry is aged out.</t>
 
             <t>Notifies an active/standby switchover in a <xref
             target="RFC5798"/> VRRP backup group: After an active/standby
@@ -334,7 +334,6 @@ module: ietf-arp
        |  +--rw enable?     boolean
        |  +--rw interval?   uint32
        +--ro statistics
-          +--ro discontinuity-time?    yang:date-and-time
           +--ro in-requests-pkts?      yang:counter32
           +--ro in-replies-pkts?       yang:counter32
           +--ro in-gratuitous-pkts?    yang:counter32
@@ -383,20 +382,20 @@ module ietf-arp {
   contact
     "WG Web: <http://tools.ietf.org/wg/rtgwg/>
      WG List: <mailto: rtgwg@ietf.org>
-     Editor: Feng Zheng
+     Author: Feng Zheng
          habby.zheng@huawei.com
      Editor: Bo Wu
          lana.wubo@huawei.com
      Editor: Robert Wilton
          rwilton@cisco.com
-     Editor: Xiaojian Ding
+     Author: Xiaojian Ding
          wjswsl@163.com";
   description
     "Address Resolution Protocol (ARP) management, which includes
      static ARP configuration, dynamic ARP learning, ARP entry query,
      and packet statistics collection.
 
-     Copyright (c) 2018 IETF Trust and the persons identified as
+     Copyright (c) 2019 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
@@ -406,10 +405,10 @@ module ietf-arp {
      Relating to IETF Documents
      (http://trustee.ietf.org/license-info).
 
-     This version of this YANG module is part of RFC XXXX; see the RFC
-      itself for full legal notices.";
+     This version of this YANG module is part of RFC XXXX; see the
+      RFC itself for full legal notices.";
 
-  revision 2019-02-21 {
+  revision 2019-03-27 {
     description
       "Init revision";
     reference "RFC XXXX: A Yang Data Model for ARP";
@@ -505,7 +504,11 @@ module ietf-arp {
           type boolean;
           description
             "Enable or disable sending gratuitous ARP packet on the
-             interface.  The default behaviour is device specific";
+             interface.
+
+             The default behaviour is device specific, and a
+             deviation could used to to specify a device specific
+             default.";
         }
         leaf interval {
           type uint32 {
@@ -522,22 +525,12 @@ module ietf-arp {
         description
           "ARP per-interface packet statistics
 
-           For all ARP counters, discontinuities in the value can
-           occur at re-initialization of the management system and at
-           other times as indicated by the value of
-           'discontinuity-time'.";
+           For all ARP interface counters, discontinuities in the
+           value can occur at re-initialization of the management
+           system and at other times as indicated by the value of
+           '../../statistics/discontinuity-time' in the
+           ietf-interfaces YANG module.";
 
-        leaf discontinuity-time {
-          type yang:date-and-time;
-          description
-            "The time on the most recent occasion at which any one or
-             more of this interface's ARP counters suffered a
-             discontinuity.  If no such discontinuities have occurred
-             since the last re-initialization of the local management
-             subsystem, then this node contains the time the local
-             management subsystem re-initialized itself.";
-        }
-        
         leaf in-requests-pkts {
           type yang:counter32;
           description
@@ -551,22 +544,28 @@ module ietf-arp {
             "The number of ARP reply packets received on this
              interface.";
         }
+        
         leaf in-gratuitous-pkts {
           type yang:counter32;
           description
             "The number of gratuitous ARP packets received on this
              interface.";
         }
+        
         leaf out-requests-pkts {
           type yang:counter32;
           description
-            "The number of ARP request packets sent on this interface.";
+            "The number of ARP request packets sent on this
+             interface.";
         }
+        
         leaf out-replies-pkts {
           type yang:counter32;
           description
-            "The number of ARP reply packets sent on this interface.";
+            "The number of ARP reply packets sent on this
+             interface.";
         }
+        
         leaf out-gratuitous-pkts {
           type yang:counter32;
           description
@@ -585,12 +584,12 @@ module ietf-arp {
       units "seconds";
       config false;
       description
-        "The number of seconds until the dynamic ARP entry expires and is
-         removed from the ARP cache";
+        "The number of seconds until the dynamic ARP entry expires
+         and is removed from the ARP cache";
     }
   }
 }
-         ]]></artwork>
+]]></artwork>
       </figure>
     </section>
 
@@ -606,44 +605,44 @@ module ietf-arp {
         (defined in [RFC8344] ).</t>
        <figure>
          <artwork> <![CDATA[
-      <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
-      <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">      
-        <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
-          <neighbor>
-            <ip-address>192.0.2.1</ip-address>
-            <link-layer-address>00e0-fc01-0000</link-layer-address>
-            <origin>static</origin>
-          </neighbor>
-        </ipv4>
-      </interfaces>
-         ]]></artwork>
+<config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+<interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+  <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
+    <neighbor>
+      <ip-address>192.0.2.1</ip-address>
+      <link-layer-address>00e0-fc01-0000</link-layer-address>
+      <origin>static</origin>
+    </neighbor>
+  </ipv4>
+</interfaces>
+]]></artwork>
         </figure>
       </section>
 
       <section title="ARP Dynamic Learning">
         <t>Requirement: Disable ARP dynamic learning configuration.</t>
       <figure>
-      <artwork> <![CDATA[
-      <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
-      <arp xmlns="urn:ietf:params:xml:ns:yang:ietf-arp">
-        <dynamic-learning>false</dynamic-learning>
-      </arp>
-      <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
-        <interface>
-          <name>eth0</name>
-          <arp>
-            <expiry-time>1200</expiry-time>
-            <dynamic-learning>false</dynamic-learning>
-            <proxy-arp>
-              <mode>remote-only</mode>
-            </proxy-arp>
-            <gratuitous-arp>
-              <enable>true<enable>
-              <interval>60</interval>
-            </gratuitous-arp>
-          </arp>
-        </interface>
-      </interfaces>
+	<artwork><![CDATA[
+<config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+<arp xmlns="urn:ietf:params:xml:ns:yang:ietf-arp">
+  <dynamic-learning>false</dynamic-learning>
+</arp>
+<interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+  <interface>
+    <name>eth0</name>
+    <arp>
+      <expiry-time>1200</expiry-time>
+      <dynamic-learning>false</dynamic-learning>
+      <proxy-arp>
+        <mode>remote-only</mode>
+      </proxy-arp>
+      <gratuitous-arp>
+        <enable>true<enable>
+        <interval>60</interval>
+      </gratuitous-arp>
+    </arp>
+  </interface>
+</interfaces>
         ]]></artwork>
         </figure>
       </section>
@@ -702,10 +701,14 @@ module ietf-arp {
           proxy on interface. They could allow traffic to be mis-configured
           (denial-of- service attack).</t>
 
-          <t>interface/ipv4/arp/gratuitous-arp:This leaf is used to enable 
-          sending gratuitous ARP packet on an interface.This configuration 
-          could allow an attacker to inject spoofed traffic into the 
-          network, e.g. man-in-the-middle attack.</t>
+          <t>interface/ipv4/arp/gratuitous-arp:This leaf is used to
+          enable sending gratuitous ARP packet on an interface.  This
+          configuration could allow an attacker to inject spoofed
+          traffic into the network, e.g. man-in-the-middle attack.
+          The default value for this data node is device specific, and
+          hence users of this model MUST understand whether or not
+          gratutious ARP is enabled and whether this could constitute
+          a security risk.</t>
         </list>
       </t>
     </section>
