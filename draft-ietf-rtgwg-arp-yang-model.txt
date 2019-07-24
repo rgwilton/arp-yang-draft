@@ -674,14 +674,17 @@ Zheng, et al.           Expires January 25, 2020               [Page 12]
 Internet-Draft               ARP YANG model                    July 2019
 
 
-   URI: urn:ietf:params:xml:ns:yang:ietf-arp Registrant Contact:
-           The IESG. XML: N/A, the requested URI is an XML namespace.
+       URI: urn:ietf:params:xml:ns:yang:ietf-arp
+       Registrant Contact: The RTGWG WG of the IETF.
+       XML: N/A, the requested URI is an XML namespace.
 
    This document registers a YANG module in the YANG Module Names
    registry [RFC6020].
 
-   Name: ietf-arp Namespace: urn:ietf:params:xml:ns:yang:
-           ietf-arp Prefix: arp Reference: RFC XXXX
+       Name: ietf-arp
+       Namespace: urn:ietf:params:xml:ns:yang:ietf-arp
+       Prefix: arp
+       Reference: RFC XXXX
 
 7.  Security Considerations
 
@@ -707,21 +710,18 @@ Internet-Draft               ARP YANG model                    July 2019
    and their sensitivity/vulnerability:
 
       arp/dynamic-learning: This leaf is used to enable ARP dynamic
-      learning on all interfaces.ARP dynamic learning could allow an
+      learning on all interfaces.  ARP dynamic learning could allow an
       attacker to inject spoofed traffic into the network, e.g. denial-
       of- service attack.
 
-      interface/ipv4/arp/proxy:These leaves are used to enable ARP proxy
-      on interface.  They could allow traffic to be mis-configured
-      (denial-of- service attack).
+      interface/ipv4/arp/proxy-arp: These leaves are used to enable
+      proxy ARP on an interface.  They could allow traffic to be mis-
+      configured (denial-of-service attack).
 
-      interface/ipv4/arp/gratuitous-arp:This leaf is used to enable
+      interface/ipv4/arp/gratuitous-arp: These leaves are used to enable
       sending gratuitous ARP packet on an interface.  This configuration
       could allow an attacker to inject spoofed traffic into the
       network, e.g. man-in-the-middle attack.  The default value for
-      this data node is device specific, and hence users of this model
-      MUST understand whether or not gratutious ARP is enabled and
-      whether this could constitute a security risk.
 
 
 
@@ -729,6 +729,10 @@ Zheng, et al.           Expires January 25, 2020               [Page 13]
 
 Internet-Draft               ARP YANG model                    July 2019
 
+
+      this data node is device specific, and hence users of this model
+      MUST understand whether or not gratutious ARP is enabled and
+      whether this could constitute a security risk.
 
 8.  Acknowledgments
 
@@ -772,10 +776,6 @@ Internet-Draft               ARP YANG model                    July 2019
               Shell (SSH)", RFC 6242, DOI 10.17487/RFC6242, June 2011,
               <https://www.rfc-editor.org/info/rfc6242>.
 
-   [RFC6991]  Schoenwaelder, J., Ed., "Common YANG Data Types",
-              RFC 6991, DOI 10.17487/RFC6991, July 2013,
-              <https://www.rfc-editor.org/info/rfc6991>.
-
 
 
 
@@ -785,6 +785,10 @@ Zheng, et al.           Expires January 25, 2020               [Page 14]
 
 Internet-Draft               ARP YANG model                    July 2019
 
+
+   [RFC6991]  Schoenwaelder, J., Ed., "Common YANG Data Types",
+              RFC 6991, DOI 10.17487/RFC6991, July 2013,
+              <https://www.rfc-editor.org/info/rfc6991>.
 
    [RFC7950]  Bjorklund, M., Ed., "The YANG 1.1 Data Modeling Language",
               RFC 7950, DOI 10.17487/RFC7950, August 2016,
@@ -829,10 +833,6 @@ Internet-Draft               ARP YANG model                    July 2019
               DOI 10.17487/RFC8014, December 2016,
               <https://www.rfc-editor.org/info/rfc8014>.
 
-   [RFC8040]  Bierman, A., Bjorklund, M., and K. Watsen, "RESTCONF
-              Protocol", RFC 8040, DOI 10.17487/RFC8040, January 2017,
-              <https://www.rfc-editor.org/info/rfc8040>.
-
 
 
 
@@ -841,6 +841,10 @@ Zheng, et al.           Expires January 25, 2020               [Page 15]
 
 Internet-Draft               ARP YANG model                    July 2019
 
+
+   [RFC8040]  Bierman, A., Bjorklund, M., and K. Watsen, "RESTCONF
+              Protocol", RFC 8040, DOI 10.17487/RFC8040, January 2017,
+              <https://www.rfc-editor.org/info/rfc8040>.
 
    [RFC8340]  Bjorklund, M. and L. Berger, Ed., "YANG Tree Diagrams",
               BCP 215, RFC 8340, DOI 10.17487/RFC8340, March 2018,
@@ -877,10 +881,6 @@ Authors' Addresses
    Xiaojian Ding
 
    Email: wjswsl@163.com
-
-
-
-
 
 
 

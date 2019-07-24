@@ -710,15 +710,15 @@ module ietf-arp {
       <t>
         <list style="hanging">
           <t>arp/dynamic-learning: This leaf is used to enable ARP dynamic
-          learning on all interfaces.ARP dynamic learning could allow an
+          learning on all interfaces.  ARP dynamic learning could allow an
           attacker to inject spoofed traffic into the network, e.g. denial-of-
           service attack.</t>
 
-          <t>interface/ipv4/arp/proxy:These leaves are used to enable ARP
-          proxy on interface. They could allow traffic to be mis-configured
-          (denial-of- service attack).</t>
+          <t>interface/ipv4/arp/proxy-arp: These leaves are used to
+          enable proxy ARP on an interface. They could allow traffic
+          to be mis-configured (denial-of-service attack).</t>
 
-          <t>interface/ipv4/arp/gratuitous-arp:This leaf is used to
+          <t>interface/ipv4/arp/gratuitous-arp: These leaves are used to
           enable sending gratuitous ARP packet on an interface.  This
           configuration could allow an attacker to inject spoofed
           traffic into the network, e.g. man-in-the-middle attack.
@@ -732,7 +732,7 @@ module ietf-arp {
 
     <section anchor="ack" title="Acknowledgments">
       <t>The authors wish to thank Alex Campbell, Reshad Rahman, Qin Wu,
-      Tom Petch, Jeffrey Haas, others for their helpful comments.</t>
+      Tom Petch, Jeffrey Haas, and others for their helpful comments.</t>
     </section>
 
     <!---->
