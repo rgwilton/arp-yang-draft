@@ -156,7 +156,11 @@ module ietf-arp {
           units "seconds";
           description
             "The interval, in seconds, between sending gratuitous ARP
-             packet on the interface.";
+             packet on the interface.
+
+             The default behaviour is device specific, and a
+             deviation could used to to specify a device specific
+             default.";
         }
       }
       container statistics {

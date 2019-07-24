@@ -517,7 +517,11 @@ module ietf-arp {
           units "seconds";
           description
             "The interval, in seconds, between sending gratuitous ARP
-             packet on the interface.";
+             packet on the interface.
+
+	     The default behaviour is device specific, and a
+	     deviation could used to to specify a device specific
+             default.";
         }
       }
       container statistics {
@@ -596,49 +600,55 @@ module ietf-arp {
     <!---->
 
     <section anchor="datamodel" title="Data Model Examples">
-      <t>This section presents a simple example of configuring static ARP
-      entries and dynamic learning, based on the YANG modules specified 
-      in Section 4.</t>
+      <t>This section presents two simple ARP configuration examples:</t>
 
-      <section title="Static ARP Entries">
-        <t>Requirement: Enable static ARP entry configuration on interface
-        (defined in [RFC8344] ).</t>
+      <section title="Configured static ARP Entry">
+	<t>This example illustrates the configuration of a static ARP
+	entry for peer 192.0.2.1 with MAC address 00:00:5E:00:53:AB
+	using the model defined in <xref target="RFC8344"/>.</t>
        <figure>
          <artwork> <![CDATA[
 <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
-<interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
-  <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
-    <neighbor>
-      <ip-address>192.0.2.1</ip-address>
-      <link-layer-address>00e0-fc01-0000</link-layer-address>
-      <origin>static</origin>
-    </neighbor>
-  </ipv4>
-</interfaces>
+  <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+    <interface>
+      <name>eth0</name>
+      <type>ianaift:ethernetCsmacd</type>
+      <!-- other parameters from ietf-interfaces omitted -->
+      
+      <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
+        <!-- ipv4 address configuration parameters omitted -->
+        <neighbor>
+          <ip-address>192.0.2.1</ip-address>
+          <link-layer-address>00:00:5E:00:53:AB</link-layer-address>
+        </neighbor>
+      </ipv4>
+    </interface>
+  </interfaces>
+</config>
 ]]></artwork>
         </figure>
       </section>
 
-      <section title="ARP Dynamic Learning">
-        <t>Requirement: Disable ARP dynamic learning configuration.</t>
+      <section title="Configuration of proxy ARP and gratuitous ARP">
+        <t>This example illustrates the configuration of ARP entry
+        expiry time, proxy ARP in 'remote-only' mode, and enabling
+        gratuitous ARP with an interval of 10 minutes.</t>
       <figure>
 	<artwork><![CDATA[
 <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
 <arp xmlns="urn:ietf:params:xml:ns:yang:ietf-arp">
-  <dynamic-learning>false</dynamic-learning>
 </arp>
 <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
   <interface>
     <name>eth0</name>
     <arp>
       <expiry-time>1200</expiry-time>
-      <dynamic-learning>false</dynamic-learning>
       <proxy-arp>
         <mode>remote-only</mode>
       </proxy-arp>
       <gratuitous-arp>
         <enable>true<enable>
-        <interval>60</interval>
+        <interval>600</interval>
       </gratuitous-arp>
     </arp>
   </interface>
@@ -714,8 +724,8 @@ module ietf-arp {
     </section>
 
     <section anchor="ack" title="Acknowledgments">
-      <t>The authors wish to thank Alex Campbell and Reshad Rahman, Qin Wu,
-      Tom Petch, many others for their helpful comments.</t>
+      <t>The authors wish to thank Alex Campbell, Reshad Rahman, Qin Wu,
+      Tom Petch, Jeffrey Haas, others for their helpful comments.</t>
     </section>
 
     <!---->
