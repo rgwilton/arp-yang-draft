@@ -641,16 +641,21 @@ module ietf-arp {
 <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
   <interface>
     <name>eth0</name>
-    <arp>
-      <expiry-time>1200</expiry-time>
-      <proxy-arp>
-        <mode>remote-only</mode>
-      </proxy-arp>
-      <gratuitous-arp>
-        <enable>true<enable>
-        <interval>600</interval>
-      </gratuitous-arp>
-    </arp>
+      <!-- other parameters from ietf-interfaces omitted -->
+   
+      <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
+        <!-- ipv4 address configuration parameters omitted -->
+          <arp>
+            <expiry-time>1200</expiry-time>
+            <proxy-arp>
+              <mode>remote-only</mode>
+            </proxy-arp>
+            <gratuitous-arp>
+              <enable>true<enable>
+              <interval>600</interval>
+            </gratuitous-arp>
+          </arp>
+      </ipv4>
   </interface>
 </interfaces>
         ]]></artwork>
