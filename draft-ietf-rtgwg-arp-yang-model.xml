@@ -321,8 +321,8 @@
         <figure>
           <artwork><![CDATA[
 module: ietf-arp
-    +--rw arp
-       +--rw dynamic-learning?   boolean
+  +--rw arp
+     +--rw dynamic-learning?   boolean
 
   augment /if:interfaces/if:interface/ip:ipv4:
     +--rw arp
@@ -519,8 +519,8 @@ module ietf-arp {
             "The interval, in seconds, between sending gratuitous ARP
              packet on the interface.
 
-	     The default behaviour is device specific, and a
-	     deviation could used to to specify a device specific
+             The default behaviour is device specific, and a
+             deviation could used to to specify a device specific
              default.";
         }
       }
@@ -589,7 +589,7 @@ module ietf-arp {
       config false;
       description
         "The number of seconds until the dynamic ARP entry expires
-         and is removed from the ARP cache";
+         and is removed from the ARP cache.";
     }
   }
 }
@@ -603,28 +603,29 @@ module ietf-arp {
       <t>This section presents two simple ARP configuration examples:</t>
 
       <section title="Configured static ARP Entry">
-	<t>This example illustrates the configuration of a static ARP
-	entry for peer 192.0.2.1 with MAC address 00:00:5E:00:53:AB
-	using the model defined in <xref target="RFC8344"/>.</t>
+	<t>This example illustrates the configuration for a static ARP
+        entry for peer 192.0.2.1 with MAC address 00:00:5E:00:53:AB
+        using the model defined in <xref target="RFC8344"/>.</t>
        <figure>
          <artwork> <![CDATA[
-<config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
-  <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
-    <interface>
-      <name>eth0</name>
-      <type>ianaift:ethernetCsmacd</type>
-      <!-- other parameters from ietf-interfaces omitted -->
-      
-      <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
-        <!-- ipv4 address configuration parameters omitted -->
-        <neighbor>
-          <ip-address>192.0.2.1</ip-address>
-          <link-layer-address>00:00:5E:00:53:AB</link-layer-address>
-        </neighbor>
-      </ipv4>
-    </interface>
-  </interfaces>
-</config>
+<?xml version="1.0" encoding="utf-8"?>
+<interfaces
+    xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces"
+    xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">
+  <interface>
+    <name>eth0</name>
+    <type>ianaift:ethernetCsmacd</type>
+    <!-- other parameters from ietf-interfaces omitted -->
+    
+    <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
+      <!-- ipv4 address configuration parameters omitted -->
+      <neighbor>
+        <ip>192.0.2.1</ip>
+        <link-layer-address>00:00:5E:00:53:AB</link-layer-address>
+      </neighbor>
+    </ipv4>
+  </interface>
+</interfaces>
 ]]></artwork>
         </figure>
       </section>
@@ -634,28 +635,29 @@ module ietf-arp {
         expiry time, proxy ARP in 'remote-only' mode, and enabling
         gratuitous ARP with an interval of 10 minutes.</t>
       <figure>
-	<artwork><![CDATA[
-<config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
-<arp xmlns="urn:ietf:params:xml:ns:yang:ietf-arp">
-</arp>
-<interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+        <artwork><![CDATA[
+<?xml version="1.0" encoding="utf-8"?>
+<interfaces
+    xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces"
+    xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">
   <interface>
     <name>eth0</name>
-      <!-- other parameters from ietf-interfaces omitted -->
+    <type>ianaift:ethernetCsmacd</type>
+    <!-- other parameters from ietf-interfaces omitted -->
    
-      <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
-        <!-- ipv4 address configuration parameters omitted -->
-          <arp>
-            <expiry-time>1200</expiry-time>
-            <proxy-arp>
-              <mode>remote-only</mode>
-            </proxy-arp>
-            <gratuitous-arp>
-              <enable>true<enable>
-              <interval>600</interval>
-            </gratuitous-arp>
-          </arp>
-      </ipv4>
+    <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
+      <!-- ipv4 address configuration parameters omitted -->
+      <arp xmlns="urn:ietf:params:xml:ns:yang:ietf-arp">
+        <expiry-time>1200</expiry-time>
+        <proxy-arp>
+          <mode>remote-only</mode>
+        </proxy-arp>
+        <gratuitous-arp>
+          <enable>true</enable>
+          <interval>600</interval>
+        </gratuitous-arp>
+      </arp>
+    </ipv4>
   </interface>
 </interfaces>
         ]]></artwork>
@@ -673,7 +675,7 @@ module ietf-arp {
     URI: urn:ietf:params:xml:ns:yang:ietf-arp
     Registrant Contact: The RTGWG WG of the IETF.
     XML: N/A, the requested URI is an XML namespace.
-	</artwork>
+        </artwork>
       </figure>
 
       <t>This document registers a YANG module in the YANG Module Names
@@ -685,7 +687,7 @@ module ietf-arp {
     Namespace: urn:ietf:params:xml:ns:yang:ietf-arp
     Prefix: arp
     Reference: RFC XXXX
-	</artwork>
+        </artwork>
       </figure>
     </section>
 
@@ -714,10 +716,10 @@ module ietf-arp {
 
       <t>
         <list style="hanging">
-          <t>arp/dynamic-learning: This leaf is used to enable ARP dynamic
-          learning on all interfaces.  ARP dynamic learning could allow an
-          attacker to inject spoofed traffic into the network, e.g. denial-of-
-          service attack.</t>
+          <t>arp/dynamic-learning: This leaf is used to enable ARP
+          dynamic learning on all interfaces.  ARP dynamic learning
+          could allow an attacker to inject spoofed traffic into the
+          network, e.g. denial-of-service attack.</t>
 
           <t>interface/ipv4/arp/proxy-arp: These leaves are used to
           enable proxy ARP on an interface. They could allow traffic
@@ -751,8 +753,8 @@ module ietf-arp {
       &rfc2119;
       &rfc3688;
       &rfc5227;
-      &rfc6020;	    
-      &rfc6242;	    
+      &rfc6020;    
+      &rfc6242;    
       &rfc6991;
       &rfc7950;
       &rfc8174;
@@ -765,7 +767,7 @@ module ietf-arp {
     <references title="Informative References">
       &rfc5798;
       &rfc6241;
-      &rfc8014;	   
+      &rfc8014;
       &rfc8040;
       &rfc8340;
       &rfc8341;

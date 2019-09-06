@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<interfaces
+    xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces"
+    xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">
+  <interface>
+    <name>eth0</name>
+    <type>ianaift:ethernetCsmacd</type>
+    <!-- other parameters from ietf-interfaces omitted -->
+   
+    <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
+      <!-- ipv4 address configuration parameters omitted -->
+      <arp xmlns="urn:ietf:params:xml:ns:yang:ietf-arp">
+        <expiry-time>1200</expiry-time>
+        <proxy-arp>
+          <mode>remote-only</mode>
+        </proxy-arp>
+        <gratuitous-arp>
+          <enable>true</enable>
+          <interval>600</interval>
+        </gratuitous-arp>
+      </arp>
+    </ipv4>
+  </interface>
+</interfaces>

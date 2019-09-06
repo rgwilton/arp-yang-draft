@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<interfaces
+    xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces"
+    xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">
+  <interface>
+    <name>eth0</name>
+    <type>ianaift:ethernetCsmacd</type>
+    <!-- other parameters from ietf-interfaces omitted -->
+    
+    <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
+      <!-- ipv4 address configuration parameters omitted -->
+      <neighbor>
+        <ip>192.0.2.1</ip>
+        <link-layer-address>00:00:5E:00:53:AB</link-layer-address>
+      </neighbor>
+    </ipv4>
+  </interface>
+</interfaces>
