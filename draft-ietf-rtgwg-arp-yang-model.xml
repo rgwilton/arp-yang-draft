@@ -356,7 +356,7 @@ module: ietf-arp
       Interface Management</xref>, and <xref target="RFC8344">A YANG Data
       Model for IP Management</xref>.</t>
 
-      <t>&lt;CODE BEGINS&gt; file "ietf-arp@2019-02-21.yang" </t>
+      <t>&lt;CODE BEGINS&gt; file "ietf-arp@2019-11-04.yang" </t>
         <figure>
          <artwork><![CDATA[
 module ietf-arp {
@@ -408,7 +408,7 @@ module ietf-arp {
      This version of this YANG module is part of RFC XXXX; see the
       RFC itself for full legal notices.";
 
-  revision 2019-03-27 {
+  revision 2019-11-04 {
     description
       "Init revision";
     reference "RFC XXXX: A Yang Data Model for ARP";
@@ -470,7 +470,7 @@ module ietf-arp {
             }
             enum remote-only {
               description
-                "The system responds to ARP requests only when the
+                "The system only responds to ARP requests when the
                  sender and target IP addresses are in different
                  subnets.";
             }

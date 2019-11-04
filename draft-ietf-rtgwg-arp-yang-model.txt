@@ -5,10 +5,10 @@
 RTGWG                                                           F. Zheng
 Internet-Draft                                                B. Wu, Ed.
 Intended status: Standards Track                                  Huawei
-Expires: March 9, 2020                                    R. Wilton, Ed.
+Expires: May 7, 2020                                      R. Wilton, Ed.
                                                            Cisco Systems
                                                                  X. Ding
-                                                       September 6, 2019
+                                                        November 4, 2019
 
 
                         YANG Data Model for ARP
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 9, 2020.
+   This Internet-Draft will expire on May 7, 2020.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Zheng, et al.             Expires March 9, 2020                 [Page 1]
+Zheng, et al.              Expires May 7, 2020                  [Page 1]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
    publication of this document.  Please review these documents
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Zheng, et al.             Expires March 9, 2020                 [Page 2]
+Zheng, et al.              Expires May 7, 2020                  [Page 2]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
    Editorial Note: (To be removed by RFC Editor)
@@ -165,9 +165,9 @@ Internet-Draft               ARP YANG model               September 2019
 
 
 
-Zheng, et al.             Expires March 9, 2020                 [Page 3]
+Zheng, et al.              Expires May 7, 2020                  [Page 3]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
    The terminology for describing YANG data models is found in
@@ -221,9 +221,9 @@ Internet-Draft               ARP YANG model               September 2019
 
 
 
-Zheng, et al.             Expires March 9, 2020                 [Page 4]
+Zheng, et al.              Expires May 7, 2020                  [Page 4]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
    each interface in [RFC8344].  Dynamic entries are added by vendor
@@ -277,9 +277,9 @@ Internet-Draft               ARP YANG model               September 2019
 
 
 
-Zheng, et al.             Expires March 9, 2020                 [Page 5]
+Zheng, et al.              Expires May 7, 2020                  [Page 5]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
    module: ietf-arp
@@ -313,7 +313,7 @@ Internet-Draft               ARP YANG model               September 2019
    [RFC6991], A YANG Data Model for Interface Management [RFC8343], and
    A YANG Data Model for IP Management [RFC8344].
 
-   <CODE BEGINS> file "ietf-arp@2019-02-21.yang"
+   <CODE BEGINS> file "ietf-arp@2019-11-04.yang"
 
    module ietf-arp {
      yang-version 1.1;
@@ -333,9 +333,9 @@ Internet-Draft               ARP YANG model               September 2019
 
 
 
-Zheng, et al.             Expires March 9, 2020                 [Page 6]
+Zheng, et al.              Expires May 7, 2020                  [Page 6]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
        reference "RFC 8344: A Yang Data Model for IP Management";
@@ -372,7 +372,7 @@ Internet-Draft               ARP YANG model               September 2019
         This version of this YANG module is part of RFC XXXX; see the
          RFC itself for full legal notices.";
 
-     revision 2019-03-27 {
+     revision 2019-11-04 {
        description
          "Init revision";
        reference "RFC XXXX: A Yang Data Model for ARP";
@@ -389,9 +389,9 @@ Internet-Draft               ARP YANG model               September 2019
 
 
 
-Zheng, et al.             Expires March 9, 2020                 [Page 7]
+Zheng, et al.              Expires May 7, 2020                  [Page 7]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
             interfaces on the device, unless explicit overridden by
@@ -445,12 +445,12 @@ Internet-Draft               ARP YANG model               September 2019
 
 
 
-Zheng, et al.             Expires March 9, 2020                 [Page 8]
+Zheng, et al.              Expires May 7, 2020                  [Page 8]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
-                   "The system responds to ARP requests only when the
+                   "The system only responds to ARP requests when the
                     sender and target IP addresses are in different
                     subnets.";
                }
@@ -501,9 +501,9 @@ Internet-Draft               ARP YANG model               September 2019
 
 
 
-Zheng, et al.             Expires March 9, 2020                 [Page 9]
+Zheng, et al.              Expires May 7, 2020                  [Page 9]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
                 The default behaviour is device specific, and a
@@ -557,9 +557,9 @@ Internet-Draft               ARP YANG model               September 2019
 
 
 
-Zheng, et al.             Expires March 9, 2020                [Page 10]
+Zheng, et al.              Expires May 7, 2020                 [Page 10]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
                 interface.";
@@ -613,9 +613,9 @@ Internet-Draft               ARP YANG model               September 2019
 
 
 
-Zheng, et al.             Expires March 9, 2020                [Page 11]
+Zheng, et al.              Expires May 7, 2020                 [Page 11]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
    <?xml version="1.0" encoding="utf-8"?>
@@ -669,9 +669,9 @@ Internet-Draft               ARP YANG model               September 2019
 
 
 
-Zheng, et al.             Expires March 9, 2020                [Page 12]
+Zheng, et al.              Expires May 7, 2020                 [Page 12]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
    <?xml version="1.0" encoding="utf-8"?>
@@ -725,9 +725,9 @@ Internet-Draft               ARP YANG model               September 2019
 
 
 
-Zheng, et al.             Expires March 9, 2020                [Page 13]
+Zheng, et al.              Expires May 7, 2020                 [Page 13]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
    layer is the secure transport layer, and the mandatory-to-implement
@@ -781,9 +781,9 @@ Internet-Draft               ARP YANG model               September 2019
 
 
 
-Zheng, et al.             Expires March 9, 2020                [Page 14]
+Zheng, et al.              Expires May 7, 2020                 [Page 14]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
    [RFC0826]  Plummer, D., "An Ethernet Address Resolution Protocol: Or
@@ -837,9 +837,9 @@ Internet-Draft               ARP YANG model               September 2019
 
 
 
-Zheng, et al.             Expires March 9, 2020                [Page 15]
+Zheng, et al.              Expires May 7, 2020                 [Page 15]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
    [RFC8342]  Bjorklund, M., Schoenwaelder, J., Shafer, P., Watsen, K.,
@@ -893,9 +893,9 @@ Internet-Draft               ARP YANG model               September 2019
 
 
 
-Zheng, et al.             Expires March 9, 2020                [Page 16]
+Zheng, et al.              Expires May 7, 2020                 [Page 16]
 
-Internet-Draft               ARP YANG model               September 2019
+Internet-Draft               ARP YANG model                November 2019
 
 
 Authors' Addresses
@@ -949,4 +949,4 @@ Authors' Addresses
 
 
 
-Zheng, et al.             Expires March 9, 2020                [Page 17]
+Zheng, et al.              Expires May 7, 2020                 [Page 17]
